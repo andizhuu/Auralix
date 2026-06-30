@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Auralix</string>
+    <string name="title_activity_main">Auralix</string>
+    <string name="package_name">com.auralix.music</string>
+    <string name="custom_url_scheme">com.auralix.music</string>
+</resources>
