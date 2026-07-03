@@ -12,20 +12,34 @@ export default function useMusicLibrary() {
     setError("");
 
     try {
+      console.log("=== REQUEST PERMISSION ===");
+
       const permission = await AuralixMusic.requestPermission();
 
-      if (!permission.granted) {
+      console.log("Permission Result:", permission);
+
+      if (permission?.granted !== true) {
         setError("Izin membaca musik ditolak.");
         setSongs([]);
         return;
       }
 
+      console.log("=== LOAD SONGS ===");
+
       const result = await AuralixMusic.getSongs();
 
-      setSongs(result.songs || []);
+      console.log("Songs Result:", result);
+
+      setSongs(result?.songs || []);
     } catch (err) {
-      console.error(err);
-      setError(err?.message || "Gagal membaca musik.");
+      console.error("Music Error:", err);
+
+      setError(
+        err?.message ||
+        JSON.stringify(err) ||
+        "Gagal membaca musik."
+      );
+
       setSongs([]);
     } finally {
       setLoading(false);
@@ -42,11 +56,7 @@ export default function useMusicLibrary() {
     const keyword = query.toLowerCase();
 
     return songs.filter((song) =>
-      [
-        song.title,
-        song.artist,
-        song.album,
-      ]
+      [song.title, song.artist, song.album]
         .join(" ")
         .toLowerCase()
         .includes(keyword)

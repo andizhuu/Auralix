@@ -1,6 +1,7 @@
 package com.auralix.music;
 
 import android.Manifest;
+import android.util.Log;
 
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
@@ -15,25 +16,33 @@ import com.getcapacitor.annotation.PermissionCallback;
 import java.util.List;
 
 @CapacitorPlugin(
-    name = "AuralixMusic",
-    permissions = {
-        @Permission(
-            alias = "music",
-            strings = {
-                Manifest.permission.READ_MEDIA_AUDIO,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            }
-        )
-    }
+        name = "AuralixMusic",
+        permissions = {
+                @Permission(
+                        alias = "music",
+                        strings = {
+                                Manifest.permission.READ_MEDIA_AUDIO,
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                        }
+                )
+        }
 )
 public class AuralixMusicPlugin extends Plugin {
+
+    private static final String TAG = "AuralixMusic";
 
     @PluginMethod
     public void requestPermission(PluginCall call) {
 
-        if (getPermissionState("music") == PermissionState.GRANTED) {
+        PermissionState state = getPermissionState("music");
+
+        Log.d(TAG, "Current Permission = " + state);
+
+        if (state == PermissionState.GRANTED) {
+
             JSObject ret = new JSObject();
             ret.put("granted", true);
+
             call.resolve(ret);
             return;
         }
@@ -48,11 +57,15 @@ public class AuralixMusicPlugin extends Plugin {
     @PermissionCallback
     private void permissionCallback(PluginCall call) {
 
+        PermissionState state = getPermissionState("music");
+
+        Log.d(TAG, "Permission Callback = " + state);
+
         JSObject ret = new JSObject();
 
         ret.put(
                 "granted",
-                getPermissionState("music") == PermissionState.GRANTED
+                state == PermissionState.GRANTED
         );
 
         call.resolve(ret);
@@ -61,14 +74,20 @@ public class AuralixMusicPlugin extends Plugin {
     @PluginMethod
     public void getSongs(PluginCall call) {
 
-        if (getPermissionState("music") != PermissionState.GRANTED) {
+        PermissionState state = getPermissionState("music");
+
+        Log.d(TAG, "getSongs Permission = " + state);
+
+        if (state != PermissionState.GRANTED) {
             call.reject("Permission not granted");
             return;
         }
 
         List<Song> songs = MusicScanner.getSongs(getContext());
 
-        JSArray result = new JSArray();
+        Log.d(TAG, "Songs Found = " + songs.size());
+
+        JSArray array = new JSArray();
 
         for (Song song : songs) {
 
@@ -80,11 +99,11 @@ public class AuralixMusicPlugin extends Plugin {
             obj.put("duration", song.duration);
             obj.put("uri", song.uri);
 
-            result.put(obj);
+            array.put(obj);
         }
 
         JSObject ret = new JSObject();
-        ret.put("songs", result);
+        ret.put("songs", array);
 
         call.resolve(ret);
     }
