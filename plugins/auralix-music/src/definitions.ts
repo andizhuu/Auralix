@@ -6,8 +6,16 @@ export interface Song {
   uri: string;
 }
 
+export interface PermissionResult {
+  granted: boolean;
+}
+
+export interface SongsResult {
+  songs: Song[];
+}
+
 export interface AuralixMusicPlugin {
-  getSongs(): Promise<{
-    songs: Song[];
-  }>;
+  requestPermission(): Promise<PermissionResult>;
+
+  getSongs(): Promise<SongsResult>;
 }

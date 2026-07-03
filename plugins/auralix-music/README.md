@@ -26,6 +26,7 @@ npx cap sync
 
 <docgen-index>
 
+* [`requestPermission()`](#requestpermission)
 * [`getSongs()`](#getsongs)
 * [Interfaces](#interfaces)
 
@@ -34,18 +35,43 @@ npx cap sync
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
+### requestPermission()
+
+```typescript
+requestPermission() => Promise<PermissionResult>
+```
+
+**Returns:** <code>Promise&lt;<a href="#permissionresult">PermissionResult</a>&gt;</code>
+
+--------------------
+
+
 ### getSongs()
 
 ```typescript
-getSongs() => Promise<{ songs: Song[]; }>
+getSongs() => Promise<SongsResult>
 ```
 
-**Returns:** <code>Promise&lt;{ songs: Song[]; }&gt;</code>
+**Returns:** <code>Promise&lt;<a href="#songsresult">SongsResult</a>&gt;</code>
 
 --------------------
 
 
 ### Interfaces
+
+
+#### PermissionResult
+
+| Prop          | Type                 |
+| ------------- | -------------------- |
+| **`granted`** | <code>boolean</code> |
+
+
+#### SongsResult
+
+| Prop        | Type                |
+| ----------- | ------------------- |
+| **`songs`** | <code>Song[]</code> |
 
 
 #### Song

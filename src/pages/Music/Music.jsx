@@ -1,22 +1,33 @@
-import {
-  MdArrowBack,
-  MdMusicNote,
-  MdSearch,
-  MdMoreVert,
-} from "react-icons/md";
+import { MdArrowBack } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import BottomNav from "../../components/BottomNav/BottomNav";
+import Loading from "../../components/Loading/Loading";
 
-const songs = [
-  {
-    title: "Belum ada lagu",
-    artist: "Izinkan akses penyimpanan",
-    duration: "--:--",
-  },
-];
+import useMusicLibrary from "../../hooks/useMusicLibrary";
+
+import SearchBar from "./components/SearchBar";
+import SongCard from "./components/SongCard";
+import EmptyState from "./components/EmptyState";
+import ErrorState from "./components/ErrorState";
 
 export default function Music() {
+  const {
+    songs,
+    totalSongs,
+    query,
+    setQuery,
+    loading,
+    error,
+    refresh,
+  } = useMusicLibrary();
+
+  function handleSongClick(song) {
+    console.log("Selected:", song);
+    // Tahap berikutnya:
+    // PlayerManager.play(song.uri)
+  }
+
   return (
     <div
       className="min-h-screen pb-28 text-white"
@@ -26,11 +37,7 @@ export default function Music() {
       }}
     >
       <main className="mx-auto w-full max-w-md px-5 pt-8">
-
-        {/* Header */}
-
         <div className="flex items-center gap-4">
-
           <Link
             to="/home"
             className="rounded-xl bg-white/10 p-2"
@@ -38,111 +45,53 @@ export default function Music() {
             <MdArrowBack size={24} />
           </Link>
 
-          <div>
-
+          <div className="flex-1">
             <h1 className="text-3xl font-bold">
-
               Music Library
-
             </h1>
 
             <p className="text-cyan-400">
-
-              Semua lagu Anda
-
+              {totalSongs} Lagu ditemukan
             </p>
-
           </div>
-
         </div>
 
-        {/* Search */}
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+        />
 
-        <div className="mt-6 flex items-center rounded-2xl border border-white/10 bg-[#1A2333] px-4 py-4">
+        {loading && (
+          <div className="flex justify-center">
+            <Loading />
+          </div>
+        )}
 
-          <MdSearch
-            size={24}
-            className="text-slate-400"
+        {!loading && error && (
+          <ErrorState
+            message={error}
+            onRetry={refresh}
           />
+        )}
 
-          <input
-            placeholder="Cari lagu..."
-            className="ml-3 flex-1 bg-transparent outline-none"
-          />
+        {!loading && !error && songs.length === 0 && (
+          <EmptyState />
+        )}
 
-        </div>
-
-        {/* Song List */}
-
-        <div className="mt-8">
-
-          <h2 className="mb-4 text-lg font-semibold">
-
-            Semua Lagu
-
-          </h2>
-
-          <div className="space-y-4">
-
+        {!loading && !error && songs.length > 0 && (
+          <div className="mt-8 space-y-4">
             {songs.map((song, index) => (
-
-              <div
-                key={index}
-                className="flex items-center rounded-3xl border border-white/5 bg-[#1A2333] p-4"
-              >
-
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600">
-
-                  <MdMusicNote
-                    size={32}
-                    className="text-white"
-                  />
-
-                </div>
-
-                <div className="ml-4 flex-1">
-
-                  <h3 className="font-semibold">
-
-                    {song.title}
-
-                  </h3>
-
-                  <p className="text-sm text-slate-400">
-
-                    {song.artist}
-
-                  </p>
-
-                </div>
-
-                <div className="text-right">
-
-                  <p className="text-sm text-slate-400">
-
-                    {song.duration}
-
-                  </p>
-
-                  <MdMoreVert
-                    className="ml-auto mt-2"
-                    size={22}
-                  />
-
-                </div>
-
-              </div>
-
+              <SongCard
+                key={song.uri || index}
+                song={song}
+                onClick={handleSongClick}
+              />
             ))}
-
           </div>
-
-        </div>
-
+        )}
       </main>
 
       <BottomNav />
-
     </div>
   );
 }

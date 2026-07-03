@@ -29,27 +29,42 @@ import java.util.List;
 public class AuralixMusicPlugin extends Plugin {
 
     @PluginMethod
-    public void getSongs(PluginCall call) {
+    public void requestPermission(PluginCall call) {
 
-        if (getPermissionState("music") != PermissionState.GRANTED) {
-            requestPermissionForAlias("music", call, "musicPermissionCallback");
+        if (getPermissionState("music") == PermissionState.GRANTED) {
+            JSObject ret = new JSObject();
+            ret.put("granted", true);
+            call.resolve(ret);
             return;
         }
 
-        loadSongs(call);
+        requestPermissionForAlias(
+                "music",
+                call,
+                "permissionCallback"
+        );
     }
 
     @PermissionCallback
-    private void musicPermissionCallback(PluginCall call) {
+    private void permissionCallback(PluginCall call) {
 
-        if (getPermissionState("music") == PermissionState.GRANTED) {
-            loadSongs(call);
-        } else {
-            call.reject("Permission denied");
-        }
+        JSObject ret = new JSObject();
+
+        ret.put(
+                "granted",
+                getPermissionState("music") == PermissionState.GRANTED
+        );
+
+        call.resolve(ret);
     }
 
-    private void loadSongs(PluginCall call) {
+    @PluginMethod
+    public void getSongs(PluginCall call) {
+
+        if (getPermissionState("music") != PermissionState.GRANTED) {
+            call.reject("Permission not granted");
+            return;
+        }
 
         List<Song> songs = MusicScanner.getSongs(getContext());
 

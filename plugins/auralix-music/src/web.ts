@@ -1,12 +1,22 @@
-import { WebPlugin } from '@capacitor/core';
+import { WebPlugin } from "@capacitor/core";
 
-import type { AuralixMusicPlugin, Song } from './definitions';
+import type {
+  AuralixMusicPlugin,
+  PermissionResult,
+  SongsResult,
+} from "./definitions";
 
 export class AuralixMusicWeb
   extends WebPlugin
-  implements AuralixMusicPlugin {
+  implements AuralixMusicPlugin
+{
+  async requestPermission(): Promise<PermissionResult> {
+    return {
+      granted: true,
+    };
+  }
 
-  async getSongs(): Promise<{ songs: Song[] }> {
+  async getSongs(): Promise<SongsResult> {
     return {
       songs: [],
     };

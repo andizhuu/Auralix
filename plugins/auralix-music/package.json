@@ -17,13 +17,6 @@
   ],
   "author": "andi susanto",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/andi susanto/auralix-music.git"
-  },
-  "bugs": {
-    "url": "https://github.com/andi susanto/auralix-music/issues"
-  },
   "keywords": [
     "capacitor",
     "plugin",
@@ -41,7 +34,7 @@
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api AuralixMusicPlugin --output-readme README.md --output-json dist/docs.json",
     "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
-    "clean": "rimraf ./dist",
+    "clean": "rm -rf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
@@ -56,7 +49,6 @@
     "eslint": "^8.57.1",
     "prettier": "^3.6.2",
     "prettier-plugin-java": "^2.7.7",
-    "rimraf": "^6.1.0",
     "rollup": "^4.53.2",
     "swiftlint": "^2.0.0",
     "typescript": "^5.9.3"
