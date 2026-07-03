@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Setup Java
@@ -29,7 +29,17 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Build React
+      - name: Build Local Capacitor Plugin
+        run: |
+          cd plugins/auralix-music
+          npm install
+          npm run build
+          cd ../..
+
+      - name: Reinstall Local Plugin
+        run: npm install ./plugins/auralix-music
+
+      - name: Build React App
         run: npm run build
 
       - name: Capacitor Sync
