@@ -12,32 +12,50 @@ export default function useMusicLibrary() {
     setError("");
 
     try {
-      console.log("=== REQUEST PERMISSION ===");
+      console.log("========== AURALIX ==========");
+      console.log("Request Permission...");
 
       const permission = await AuralixMusic.requestPermission();
 
       console.log("Permission Result:", permission);
 
+      // Tampilkan hasil permission langsung di layar
       if (permission?.granted !== true) {
-        setError("Izin membaca musik ditolak.");
+        setError(
+          "Permission Result:\n\n" +
+          JSON.stringify(permission, null, 2)
+        );
         setSongs([]);
         return;
       }
 
-      console.log("=== LOAD SONGS ===");
+      console.log("Permission Granted");
 
       const result = await AuralixMusic.getSongs();
 
       console.log("Songs Result:", result);
 
-      setSongs(result?.songs || []);
+      if (!result?.songs) {
+        setError(
+          "Songs Result:\n\n" +
+          JSON.stringify(result, null, 2)
+        );
+        setSongs([]);
+        return;
+      }
+
+      setSongs(result.songs);
+
+      if (result.songs.length === 0) {
+        setError("Tidak ditemukan lagu di perangkat.");
+      }
+
     } catch (err) {
-      console.error("Music Error:", err);
+      console.error(err);
 
       setError(
-        err?.message ||
-        JSON.stringify(err) ||
-        "Gagal membaca musik."
+        "Exception:\n\n" +
+        JSON.stringify(err, null, 2)
       );
 
       setSongs([]);
@@ -55,8 +73,12 @@ export default function useMusicLibrary() {
 
     const keyword = query.toLowerCase();
 
-    return songs.filter((song) =>
-      [song.title, song.artist, song.album]
+    return songs.filter(song =>
+      [
+        song.title,
+        song.artist,
+        song.album,
+      ]
         .join(" ")
         .toLowerCase()
         .includes(keyword)
