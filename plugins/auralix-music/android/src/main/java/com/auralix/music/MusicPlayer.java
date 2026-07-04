@@ -64,17 +64,21 @@ public class MusicPlayer {
     public static int getCurrentPosition() {
 
     if (player == null) {
+        Log.d(TAG, "getCurrentPosition(): player = null");
         return 0;
     }
 
     try {
-        return player.getCurrentPosition();
+        int pos = player.getCurrentPosition();
+        Log.d(TAG, "Current Position = " + pos);
+        return pos;
     } catch (Exception e) {
+        Log.e(TAG, "getCurrentPosition failed", e);
         return 0;
     }
 }
 
-public static int getDuration() {
+   public static int getDuration() {
 
     if (player == null) {
         return 0;
