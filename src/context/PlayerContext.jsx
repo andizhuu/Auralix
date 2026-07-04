@@ -1,18 +1,120 @@
-import { createContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+} from "react";
 
-export const PlayerContext = createContext();
+import PlayerService from "../services/PlayerService";
 
-export default function PlayerProvider({ children }) {
+const PlayerContext = createContext(null);
+
+export function PlayerProvider({ children }) {
+
   const [currentSong, setCurrentSong] = useState(null);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  async function play(song) {
+
+    try {
+
+      await PlayerService.play(song);
+
+      setCurrentSong(song);
+
+      setIsPlaying(true);
+
+    } catch (err) {
+
+      console.error(err);
+    }
+  }
+
+  async function pause() {
+
+    try {
+
+      await PlayerService.pause();
+
+      setIsPlaying(false);
+
+    } catch (err) {
+
+      console.error(err);
+    }
+  }
+
+  async function resume() {
+
+    try {
+
+      await PlayerService.resume();
+
+      setIsPlaying(true);
+
+    } catch (err) {
+
+      console.error(err);
+    }
+  }
+
+  async function stop() {
+
+    try {
+
+      await PlayerService.stop();
+
+      setIsPlaying(false);
+
+    } catch (err) {
+
+      console.error(err);
+    }
+  }
+
+  async function toggle() {
+
+    if (isPlaying) {
+
+      await pause();
+
+    } else {
+
+      await resume();
+    }
+  }
+
   return (
+
     <PlayerContext.Provider
       value={{
+
         currentSong,
-        setCurrentSong,
+
+        isPlaying,
+
+        play,
+
+        pause,
+
+        resume,
+
+        stop,
+
+        toggle,
+
       }}
     >
+
       {children}
+
     </PlayerContext.Provider>
+
   );
+}
+
+export function usePlayer() {
+
+  return useContext(PlayerContext);
+
 }

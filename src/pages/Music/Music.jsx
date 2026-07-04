@@ -1,12 +1,11 @@
 import { MdArrowBack } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-import { AuralixMusic } from "@auralix/music";
-
 import BottomNav from "../../components/BottomNav/BottomNav";
 import Loading from "../../components/Loading/Loading";
 
 import useMusicLibrary from "../../hooks/useMusicLibrary";
+import { usePlayer } from "../../context/PlayerContext";
 
 import SearchBar from "./components/SearchBar";
 import SongCard from "./components/SongCard";
@@ -14,7 +13,6 @@ import EmptyState from "./components/EmptyState";
 import ErrorState from "./components/ErrorState";
 
 export default function Music() {
-
   const {
     songs,
     totalSongs,
@@ -25,25 +23,15 @@ export default function Music() {
     refresh,
   } = useMusicLibrary();
 
-  async function handleSongClick(song) {
+  const { play } = usePlayer();
 
-    try {
+  function handleSongClick(song) {
+    console.log("Selected:", song);
 
-      await AuralixMusic.play({
-        uri: song.uri,
-      });
+    play(song);
 
-      console.log("Playing:", song.title);
-
-    } catch (err) {
-
-      console.error(err);
-
-      alert(
-        err?.message ||
-        "Gagal memutar lagu."
-      );
-    }
+    // Tahap berikutnya:
+    // NativePlayer.play(song.uri);
   }
 
   return (
@@ -55,9 +43,7 @@ export default function Music() {
       }}
     >
       <main className="mx-auto w-full max-w-md px-5 pt-8">
-
         <div className="flex items-center gap-4">
-
           <Link
             to="/home"
             className="rounded-xl bg-white/10 p-2"
@@ -66,7 +52,6 @@ export default function Music() {
           </Link>
 
           <div className="flex-1">
-
             <h1 className="text-3xl font-bold">
               Music Library
             </h1>
@@ -74,9 +59,7 @@ export default function Music() {
             <p className="text-cyan-400">
               {totalSongs} Lagu ditemukan
             </p>
-
           </div>
-
         </div>
 
         <SearchBar
@@ -102,27 +85,19 @@ export default function Music() {
         )}
 
         {!loading && !error && songs.length > 0 && (
-
           <div className="mt-8 space-y-4">
-
             {songs.map((song, index) => (
-
               <SongCard
                 key={song.uri || index}
                 song={song}
                 onClick={handleSongClick}
               />
-
             ))}
-
           </div>
-
         )}
-
       </main>
 
       <BottomNav />
-
     </div>
   );
 }
