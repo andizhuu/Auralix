@@ -13,6 +13,8 @@ export default function NowPlaying() {
   const {
     currentSong,
     isPlaying,
+    currentTime,
+    duration,
     toggle,
   } = usePlayer();
 
@@ -90,7 +92,15 @@ export default function NowPlaying() {
 
         <div className="mb-2 flex justify-between text-xs text-slate-400">
 
-          <span>00:00</span>
+          <span>
+  {Math.floor(currentTime / 60)
+    .toString()
+    .padStart(2, "0")}
+  :
+  {(Math.floor(currentTime) % 60)
+    .toString()
+    .padStart(2, "0")}
+</span>
 
           <span>
 
@@ -111,12 +121,21 @@ export default function NowPlaying() {
 
         <div className="h-2 overflow-hidden rounded-full bg-slate-700">
 
-          <div className="h-full w-0 rounded-full bg-cyan-400"></div>
-
-        </div>
+          <div
+  className="h-full rounded-full bg-cyan-400 transition-all duration-300"
+  style={{
+    width:
+      duration > 0
+        ? `${Math.min((currentTime / duration) * 100, 100)}%`
+        : "0%",
+  }}
+></div>
 
       </div>
 
     </div>
+
+</div>
+
   );
 }
