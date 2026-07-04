@@ -13,6 +13,7 @@ const PlayerContext = createContext(null);
 export function PlayerProvider({ children }) {
 
   const audioRef = useRef(new Audio());
+  const pollRef = useRef(null);
 
   const [playlist, setPlaylist] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -27,11 +28,37 @@ export function PlayerProvider({ children }) {
 
   useEffect(() => {
 
-    const audio = audioRef.current;
+  if (pollRef.current) {
+    clearInterval(pollRef.current);
+  }
 
-    const updateTime = () => {
-      setCurrentTime(audio.currentTime || 0);
-    };
+  pollRef.current = setInterval(async () => {
+
+    if (!isPlaying) return;
+
+    try {
+
+      const position = await PlayerService.getCurrentPosition();
+      const total = await PlayerService.getDuration();
+
+      setCurrentTime(position / 1000);
+      setDuration(total / 1000);
+
+    } catch (e) {
+      // abaikan
+    }
+
+  }, 500);
+
+  return () => {
+
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+    }
+
+  };
+
+}, [isPlaying]);
 
     const updateDuration = () => {
       setDuration(audio.duration || 0);
@@ -41,17 +68,6 @@ export function PlayerProvider({ children }) {
       next();
     };
 
-    audio.addEventListener("timeupdate", updateTime);
-    audio.addEventListener("loadedmetadata", updateDuration);
-    audio.addEventListener("ended", ended);
-
-    return () => {
-      audio.removeEventListener("timeupdate", updateTime);
-      audio.removeEventListener("loadedmetadata", updateDuration);
-      audio.removeEventListener("ended", ended);
-    };
-
-  }, []);
 
   async function play(song, list = []) {
 
