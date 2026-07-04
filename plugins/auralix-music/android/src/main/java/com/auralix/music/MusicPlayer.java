@@ -9,14 +9,14 @@ import android.util.Log;
 public class MusicPlayer {
 
     private static final String TAG = "MusicPlayer";
-
     private static MediaPlayer player;
-
     private static String currentUri;
 
     public static void play(Context context, String uri) throws Exception {
 
         stop();
+
+        Log.d(TAG, "URI = " + uri);
 
         player = new MediaPlayer();
 
@@ -27,75 +27,64 @@ public class MusicPlayer {
                         .build()
         );
 
-        player.setDataSource(
-                context,
-                Uri.parse(uri)
-        );
+        try {
 
-        player.prepare();
+            Log.d(TAG, "setDataSource()");
+            player.setDataSource(context, Uri.parse(uri));
 
-        player.start();
+            Log.d(TAG, "prepare()");
+            player.prepare();
 
-        currentUri = uri;
+            Log.d(TAG, "start()");
+            player.start();
 
-        Log.d(TAG, "Playing : " + uri);
+            currentUri = uri;
+
+            Log.d(TAG, "isPlaying = " + player.isPlaying());
+
+        } catch (Exception e) {
+
+            Log.e(TAG, "Play failed", e);
+
+            if (player != null) {
+                player.release();
+                player = null;
+            }
+
+            throw e;
+        }
     }
 
     public static void pause() {
-
-        if (player == null)
-            return;
-
-        if (player.isPlaying()) {
-
+        if (player != null && player.isPlaying()) {
             player.pause();
-
-            Log.d(TAG, "Paused");
         }
     }
 
     public static void resume() {
-
-        if (player == null)
-            return;
-
-        if (!player.isPlaying()) {
-
+        if (player != null && !player.isPlaying()) {
             player.start();
-
-            Log.d(TAG, "Resume");
         }
     }
 
     public static void stop() {
+        if (player != null) {
+            try {
+                player.stop();
+            } catch (Exception ignored) {
+            }
 
-        if (player == null)
-            return;
-
-        try {
-
-            player.stop();
-
-        } catch (Exception ignored) {
+            player.release();
+            player = null;
+            currentUri = null;
         }
-
-        player.release();
-
-        player = null;
-
-        currentUri = null;
-
-        Log.d(TAG, "Stopped");
     }
 
     public static boolean isPlaying() {
-
-        return player != null &&
-                player.isPlaying();
+        return player != null && player.isPlaying();
     }
 
     public static String getCurrentUri() {
-
         return currentUri;
     }
 }
