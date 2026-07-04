@@ -28,6 +28,11 @@ npx cap sync
 
 * [`requestPermission()`](#requestpermission)
 * [`getSongs()`](#getsongs)
+* [`play(...)`](#play)
+* [`pause()`](#pause)
+* [`resume()`](#resume)
+* [`stop()`](#stop)
+* [`isPlaying()`](#isplaying)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -53,6 +58,57 @@ getSongs() => Promise<SongsResult>
 ```
 
 **Returns:** <code>Promise&lt;<a href="#songsresult">SongsResult</a>&gt;</code>
+
+--------------------
+
+
+### play(...)
+
+```typescript
+play(options: PlayOptions) => Promise<void>
+```
+
+| Param         | Type                                                |
+| ------------- | --------------------------------------------------- |
+| **`options`** | <code><a href="#playoptions">PlayOptions</a></code> |
+
+--------------------
+
+
+### pause()
+
+```typescript
+pause() => Promise<void>
+```
+
+--------------------
+
+
+### resume()
+
+```typescript
+resume() => Promise<void>
+```
+
+--------------------
+
+
+### stop()
+
+```typescript
+stop() => Promise<void>
+```
+
+--------------------
+
+
+### isPlaying()
+
+```typescript
+isPlaying() => Promise<PlayingResult>
+```
+
+**Returns:** <code>Promise&lt;<a href="#playingresult">PlayingResult</a>&gt;</code>
 
 --------------------
 
@@ -83,5 +139,19 @@ getSongs() => Promise<SongsResult>
 | **`album`**    | <code>string</code> |
 | **`duration`** | <code>number</code> |
 | **`uri`**      | <code>string</code> |
+
+
+#### PlayOptions
+
+| Prop      | Type                |
+| --------- | ------------------- |
+| **`uri`** | <code>string</code> |
+
+
+#### PlayingResult
+
+| Prop          | Type                 |
+| ------------- | -------------------- |
+| **`playing`** | <code>boolean</code> |
 
 </docgen-api>

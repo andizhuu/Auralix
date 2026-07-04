@@ -14,8 +14,27 @@ export interface SongsResult {
   songs: Song[];
 }
 
+export interface PlayOptions {
+  uri: string;
+}
+
+export interface PlayingResult {
+  playing: boolean;
+}
+
 export interface AuralixMusicPlugin {
+
   requestPermission(): Promise<PermissionResult>;
 
   getSongs(): Promise<SongsResult>;
+
+  play(options: PlayOptions): Promise<void>;
+
+  pause(): Promise<void>;
+
+  resume(): Promise<void>;
+
+  stop(): Promise<void>;
+
+  isPlaying(): Promise<PlayingResult>;
 }

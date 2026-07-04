@@ -3,7 +3,6 @@ package com.auralix.music;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -19,25 +18,19 @@ import com.getcapacitor.annotation.PermissionCallback;
 import java.util.List;
 
 @CapacitorPlugin(
-    name = "AuralixMusic",
-    permissions = {
-        @Permission(
-            alias = "music",
-            strings = {
-                Manifest.permission.READ_MEDIA_AUDIO,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            }
-        )
-    }
+        name = "AuralixMusic",
+        permissions = {
+                @Permission(
+                        alias = "music",
+                        strings = {
+                                Manifest.permission.READ_MEDIA_AUDIO,
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                        }
+                )
+        }
 )
 public class AuralixMusicPlugin extends Plugin {
 
-    private static final String TAG = "AuralixMusic";
-
-    /**
-     * Cek permission langsung dari Android,
-     * tidak memakai getPermissionState().
-     */
     private boolean hasMusicPermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -46,7 +39,6 @@ public class AuralixMusicPlugin extends Plugin {
                     getContext(),
                     Manifest.permission.READ_MEDIA_AUDIO
             ) == PackageManager.PERMISSION_GRANTED;
-
         }
 
         return ContextCompat.checkSelfPermission(
@@ -77,12 +69,12 @@ public class AuralixMusicPlugin extends Plugin {
     @PermissionCallback
     private void permissionCallback(PluginCall call) {
 
-        boolean granted = hasMusicPermission();
-
-        Log.d(TAG, "Permission = " + granted);
-
         JSObject ret = new JSObject();
-        ret.put("granted", granted);
+
+        ret.put(
+                "granted",
+                hasMusicPermission()
+        );
 
         call.resolve(ret);
     }
@@ -97,7 +89,8 @@ public class AuralixMusicPlugin extends Plugin {
 
         try {
 
-            List<Song> songs = MusicScanner.getSongs(getContext());
+            List<Song> songs =
+                    MusicScanner.getSongs(getContext());
 
             JSArray array = new JSArray();
 
@@ -117,15 +110,74 @@ public class AuralixMusicPlugin extends Plugin {
             JSObject ret = new JSObject();
             ret.put("songs", array);
 
-            Log.d(TAG, "Songs Found = " + songs.size());
-
             call.resolve(ret);
 
         } catch (Exception e) {
 
-            Log.e(TAG, "Scanner Error", e);
+            call.reject(e.getMessage());
+        }
+    }
+
+    @PluginMethod
+    public void play(PluginCall call) {
+
+        String uri = call.getString("uri");
+
+        if (uri == null) {
+
+            call.reject("URI is required");
+            return;
+        }
+
+        try {
+
+            MusicPlayer.play(
+                    getContext(),
+                    uri
+            );
+
+            call.resolve();
+
+        } catch (Exception e) {
 
             call.reject(e.getMessage());
         }
+    }
+
+    @PluginMethod
+    public void pause(PluginCall call) {
+
+        MusicPlayer.pause();
+
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void resume(PluginCall call) {
+
+        MusicPlayer.resume();
+
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void stop(PluginCall call) {
+
+        MusicPlayer.stop();
+
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void isPlaying(PluginCall call) {
+
+        JSObject ret = new JSObject();
+
+        ret.put(
+                "playing",
+                MusicPlayer.isPlaying()
+        );
+
+        call.resolve(ret);
     }
 }
