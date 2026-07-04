@@ -33,6 +33,8 @@ npx cap sync
 * [`resume()`](#resume)
 * [`stop()`](#stop)
 * [`isPlaying()`](#isplaying)
+* [`getCurrentPosition()`](#getcurrentposition)
+* [`getDuration()`](#getduration)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -113,6 +115,28 @@ isPlaying() => Promise<PlayingResult>
 --------------------
 
 
+### getCurrentPosition()
+
+```typescript
+getCurrentPosition() => Promise<PositionResult>
+```
+
+**Returns:** <code>Promise&lt;<a href="#positionresult">PositionResult</a>&gt;</code>
+
+--------------------
+
+
+### getDuration()
+
+```typescript
+getDuration() => Promise<DurationResult>
+```
+
+**Returns:** <code>Promise&lt;<a href="#durationresult">DurationResult</a>&gt;</code>
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -153,5 +177,19 @@ isPlaying() => Promise<PlayingResult>
 | Prop          | Type                 |
 | ------------- | -------------------- |
 | **`playing`** | <code>boolean</code> |
+
+
+#### PositionResult
+
+| Prop           | Type                |
+| -------------- | ------------------- |
+| **`position`** | <code>number</code> |
+
+
+#### DurationResult
+
+| Prop           | Type                |
+| -------------- | ------------------- |
+| **`duration`** | <code>number</code> |
 
 </docgen-api>

@@ -145,24 +145,6 @@ public class AuralixMusicPlugin extends Plugin {
     }
 
     @PluginMethod
-public void getCurrentPosition(PluginCall call) {
-
-    JSObject ret = new JSObject();
-    ret.put("position", MusicPlayer.getCurrentPosition());
-
-    call.resolve(ret);
-}
-
-@PluginMethod
-public void getDuration(PluginCall call) {
-
-    JSObject ret = new JSObject();
-    ret.put("duration", MusicPlayer.getDuration());
-
-    call.resolve(ret);
-}
-
-    @PluginMethod
     public void pause(PluginCall call) {
 
         MusicPlayer.pause();

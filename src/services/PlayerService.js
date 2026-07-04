@@ -1,28 +1,43 @@
 import { AuralixMusic } from "@auralix/music";
 
 class PlayerService {
-
   async play(song) {
-    await AuralixMusic.play({
+    if (!song?.uri) {
+      throw new Error("Song URI is empty");
+    }
+
+    return AuralixMusic.play({
       uri: song.uri,
     });
   }
 
   async pause() {
-    await AuralixMusic.pause();
+    return AuralixMusic.pause();
   }
 
   async resume() {
-    await AuralixMusic.resume();
+    return AuralixMusic.resume();
   }
 
   async stop() {
-    await AuralixMusic.stop();
+    return AuralixMusic.stop();
   }
 
   async isPlaying() {
-    return await AuralixMusic.isPlaying();
+    const result = await AuralixMusic.isPlaying();
+    return result.playing;
   }
+
+  async getCurrentPosition() {
+  const result = await AuralixMusic.getCurrentPosition();
+  return result.position;
+  }
+
+  async getDuration() {
+  const result = await AuralixMusic.getDuration();
+  return result.duration;
+}
+
 }
 
 export default new PlayerService();

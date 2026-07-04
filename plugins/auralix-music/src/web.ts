@@ -6,6 +6,8 @@ import type {
   SongsResult,
   PlayOptions,
   PlayingResult,
+  PositionResult,
+  DurationResult,
 } from "./definitions";
 
 export class AuralixMusicWeb
@@ -45,4 +47,17 @@ export class AuralixMusicWeb
       playing: false,
     };
   }
+
+  async getCurrentPosition(): Promise<PositionResult> {
+  return {
+    position: 0,
+  };
+}
+
+async getDuration(): Promise<DurationResult> {
+  return {
+    duration: 0,
+  };
+}
+
 }

@@ -61,6 +61,32 @@ public class MusicPlayer {
         }
     }
 
+    public static int getCurrentPosition() {
+
+    if (player == null) {
+        return 0;
+    }
+
+    try {
+        return player.getCurrentPosition();
+    } catch (Exception e) {
+        return 0;
+    }
+}
+
+public static int getDuration() {
+
+    if (player == null) {
+        return 0;
+    }
+
+    try {
+        return player.getDuration();
+    } catch (Exception e) {
+        return 0;
+    }
+}
+
     public static void resume() {
         if (player != null && !player.isPlaying()) {
             player.start();

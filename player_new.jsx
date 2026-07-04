@@ -6,12 +6,9 @@ import {
   useState,
 } from "react";
 
-import PlayerService from "../services/PlayerService";
-
 const PlayerContext = createContext(null);
 
 export function PlayerProvider({ children }) {
-
   const audioRef = useRef(new Audio());
 
   const [playlist, setPlaylist] = useState([]);
@@ -26,7 +23,6 @@ export function PlayerProvider({ children }) {
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-
     const audio = audioRef.current;
 
     const updateTime = () => {
@@ -50,15 +46,12 @@ export function PlayerProvider({ children }) {
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("ended", ended);
     };
-
   }, []);
 
-  async function play(song, list = []) {
-
+  function play(song, list = []) {
     if (!song) return;
 
     if (list.length) {
-
       setPlaylist(list);
 
       const idx = list.findIndex(
@@ -66,78 +59,42 @@ export function PlayerProvider({ children }) {
       );
 
       setCurrentIndex(idx);
-
     }
 
     setCurrentSong(song);
 
-    try {
+    audioRef.current.src = song.uri;
 
-      await PlayerService.play(song);
-
-      setIsPlaying(true);
-
-    } catch (e) {
-
-      console.error(e);
-
-      setIsPlaying(false);
-
-    }
-
-  }
-
-  async function pause() {
-
-    await PlayerService.pause();
-
-    setIsPlaying(false);
-
-  }
-
-  async function resume() {
-
-    await PlayerService.resume();
+    audioRef.current.play();
 
     setIsPlaying(true);
-
   }
 
-  async function toggle() {
+  function pause() {
+    audioRef.current.pause();
+    setIsPlaying(false);
+  }
 
-    if (isPlaying) {
-
-      await pause();
-
-    } else if (currentSong) {
-
-      await resume();
-
-    }
-
+  function resume() {
+    audioRef.current.play();
+    setIsPlaying(true);
   }
 
   function seek(value) {
-
     audioRef.current.currentTime = value;
-
     setCurrentTime(value);
-
   }
 
   function next() {
-
     if (!playlist.length) return;
 
     const index =
       (currentIndex + 1) % playlist.length;
 
     play(playlist[index], playlist);
-
   }
 
   function previous() {
-
     if (!playlist.length) return;
 
     const index =
@@ -146,49 +103,28 @@ export function PlayerProvider({ children }) {
         : currentIndex - 1;
 
     play(playlist[index], playlist);
-
   }
 
   return (
-
     <PlayerContext.Provider
       value={{
-
         currentSong,
-
         isPlaying,
-
         currentTime,
-
         duration,
-
         play,
-
         pause,
-
         resume,
-
-        toggle,
-
         seek,
-
         next,
-
         previous,
-
       }}
     >
-
       {children}
-
     </PlayerContext.Provider>
-
   );
-
 }
 
 export function usePlayer() {
-
   return useContext(PlayerContext);
-
 }
