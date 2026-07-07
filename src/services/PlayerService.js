@@ -11,6 +11,12 @@ class PlayerService {
     });
   }
 
+  async seekTo(position) {
+    return AuralixMusic.seekTo({
+    position,
+    });
+  }
+
   async pause() {
     return AuralixMusic.pause();
   }

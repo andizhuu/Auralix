@@ -179,6 +179,21 @@ public void getDuration(PluginCall call) {
     }
 
     @PluginMethod
+public void seekTo(PluginCall call) {
+
+    Integer position = call.getInt("position");
+
+    if (position == null) {
+        call.reject("Position is required");
+        return;
+    }
+
+    MusicPlayer.seekTo(position);
+
+    call.resolve();
+}
+
+    @PluginMethod
     public void stop(PluginCall call) {
 
         MusicPlayer.stop();

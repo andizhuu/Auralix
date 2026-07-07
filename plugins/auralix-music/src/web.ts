@@ -5,6 +5,7 @@ import type {
   PermissionResult,
   SongsResult,
   PlayOptions,
+  SeekOptions,
   PlayingResult,
   PositionResult,
   DurationResult,
@@ -29,6 +30,10 @@ export class AuralixMusicWeb
   async play(_options: PlayOptions): Promise<void> {
     console.warn("play() hanya tersedia di Android.");
   }
+
+ async seekTo(_options: SeekOptions): Promise<void> {
+  console.warn("seekTo() hanya tersedia di Android.");
+ }
 
   async pause(): Promise<void> {
     console.warn("pause() hanya tersedia di Android.");

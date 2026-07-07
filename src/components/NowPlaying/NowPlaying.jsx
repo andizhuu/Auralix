@@ -16,6 +16,7 @@ export default function NowPlaying() {
     currentTime,
     duration,
     toggle,
+    seek,
   } = usePlayer();
 
   return (
@@ -119,19 +120,18 @@ export default function NowPlaying() {
 
         </div>
 
-        <div className="h-2 overflow-hidden rounded-full bg-slate-700">
+        <div className="mt-2">
 
-          <div
-  className="h-full rounded-full bg-cyan-400 transition-all duration-300"
-  style={{
-    width:
-      duration > 0
-        ? `${Math.min((currentTime / duration) * 100, 100)}%`
-        : "0%",
-  }}
-></div>
+  <input
+    type="range"
+    min="0"
+    max={duration || 0}
+    value={currentTime}
+    onChange={(e) => seek(Number(e.target.value))}
+    className="w-full accent-cyan-400"
+  />
 
-      </div>
+</div>
 
     </div>
 

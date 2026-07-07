@@ -26,6 +26,10 @@ export interface PlayOptions {
   uri: string;
 }
 
+export interface SeekOptions {
+  position: number;
+}
+
 export interface PlayingResult {
   playing: boolean;
 }
@@ -34,6 +38,7 @@ export interface AuralixMusicPlugin {
   requestPermission(): Promise<PermissionResult>;
   getSongs(): Promise<SongsResult>;
   play(options: PlayOptions): Promise<void>;
+  seekTo(options: SeekOptions): Promise<void>;
   pause(): Promise<void>;
   resume(): Promise<void>;
   stop(): Promise<void>;

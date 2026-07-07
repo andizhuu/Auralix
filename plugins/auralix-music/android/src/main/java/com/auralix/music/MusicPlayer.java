@@ -114,6 +114,19 @@ public class MusicPlayer {
         return player != null && player.isPlaying();
     }
 
+   public static void seekTo(int position) {
+
+    if (player == null) {
+        return;
+    }
+
+    try {
+        player.seekTo(position);
+    } catch (Exception e) {
+        Log.e(TAG, "seekTo failed", e);
+    }
+}
+
     public static String getCurrentUri() {
         return currentUri;
     }

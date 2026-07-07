@@ -29,6 +29,7 @@ npx cap sync
 * [`requestPermission()`](#requestpermission)
 * [`getSongs()`](#getsongs)
 * [`play(...)`](#play)
+* [`seekTo(...)`](#seekto)
 * [`pause()`](#pause)
 * [`resume()`](#resume)
 * [`stop()`](#stop)
@@ -73,6 +74,19 @@ play(options: PlayOptions) => Promise<void>
 | Param         | Type                                                |
 | ------------- | --------------------------------------------------- |
 | **`options`** | <code><a href="#playoptions">PlayOptions</a></code> |
+
+--------------------
+
+
+### seekTo(...)
+
+```typescript
+seekTo(options: SeekOptions) => Promise<void>
+```
+
+| Param         | Type                                                |
+| ------------- | --------------------------------------------------- |
+| **`options`** | <code><a href="#seekoptions">SeekOptions</a></code> |
 
 --------------------
 
@@ -170,6 +184,13 @@ getDuration() => Promise<DurationResult>
 | Prop      | Type                |
 | --------- | ------------------- |
 | **`uri`** | <code>string</code> |
+
+
+#### SeekOptions
+
+| Prop           | Type                |
+| -------------- | ------------------- |
+| **`position`** | <code>number</code> |
 
 
 #### PlayingResult

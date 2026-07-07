@@ -133,13 +133,21 @@ export function PlayerProvider({ children }) {
 
   }
 
-  function seek(value) {
+  async function seek(value) {
 
-    audioRef.current.currentTime = value;
+  try {
+
+    await PlayerService.seekTo(
+      Math.floor(value * 1000)
+    );
 
     setCurrentTime(value);
 
+  } catch (e) {
+    console.error(e);
   }
+
+}
 
   function next() {
 
