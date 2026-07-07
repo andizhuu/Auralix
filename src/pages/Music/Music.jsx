@@ -28,7 +28,7 @@ export default function Music() {
   function handleSongClick(song) {
     console.log("Selected:", song);
 
-    play(song);
+    play(song, songs);
 
     // Tahap berikutnya:
     // NativePlayer.play(song.uri);
