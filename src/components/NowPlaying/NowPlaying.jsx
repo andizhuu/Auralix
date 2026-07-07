@@ -17,6 +17,8 @@ export default function NowPlaying() {
     duration,
     toggle,
     seek,
+    next,
+    previous,
   } = usePlayer();
 
   return (
@@ -60,8 +62,9 @@ export default function NowPlaying() {
 
           <div className="mt-4 flex items-center gap-4">
 
-            <button className="rounded-full bg-white/10 p-2">
-
+            <button
+              onClick={previous}
+              className="rounded-full bg-white/10 p-2">
               <MdSkipPrevious size={22} />
 
             </button>
@@ -77,7 +80,9 @@ export default function NowPlaying() {
 
             </button>
 
-            <button className="rounded-full bg-white/10 p-2">
+            <button
+              onClick={next}
+              className="rounded-full bg-white/10 p-2">
 
               <MdSkipNext size={22} />
 
