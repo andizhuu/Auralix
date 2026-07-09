@@ -31,6 +31,21 @@ import java.util.List;
 )
 public class AuralixMusicPlugin extends Plugin {
 
+   @Override
+public void load() {
+
+    super.load();
+
+    MusicPlayer.setCompletionListener(() -> {
+
+        JSObject data = new JSObject();
+
+        notifyListeners("songCompleted", data);
+
+    });
+
+}
+
     private boolean hasMusicPermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

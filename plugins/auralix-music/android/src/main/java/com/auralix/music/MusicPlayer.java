@@ -11,6 +11,15 @@ public class MusicPlayer {
     private static final String TAG = "MusicPlayer";
     private static MediaPlayer player;
     private static String currentUri;
+   public interface CompletionListener {
+    void onCompleted();
+}
+
+private static CompletionListener completionListener;
+
+public static void setCompletionListener(CompletionListener listener) {
+    completionListener = listener;
+}
 
     public static void play(Context context, String uri) throws Exception {
 
@@ -39,6 +48,16 @@ public class MusicPlayer {
             player.start();
 
             currentUri = uri;
+
+            player.setOnCompletionListener(mp -> {
+
+    Log.d(TAG, "Song completed");
+
+    if (completionListener != null) {
+        completionListener.onCompleted();
+    }
+
+});
 
             Log.d(TAG, "isPlaying = " + player.isPlaying());
 
