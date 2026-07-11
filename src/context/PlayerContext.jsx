@@ -8,6 +8,8 @@ import {
 
 import PlayerService from "../services/PlayerService";
 
+import { AuralixMusic } from "@auralix/music";
+
 const PlayerContext = createContext(null);
 
 export function PlayerProvider({ children }) {
@@ -59,6 +61,33 @@ export function PlayerProvider({ children }) {
   };
 
 }, [isPlaying]);
+
+useEffect(() => {
+
+  let listener;
+
+  async function register() {
+
+    listener = await AuralixMusic.addListener(
+      "songCompleted",
+      () => {
+
+        next();
+
+      }
+    );
+
+  }
+
+  register();
+
+  return () => {
+
+    listener?.remove();
+
+  };
+
+}, []);
 
     const updateDuration = () => {
       setDuration(audio.duration || 0);
