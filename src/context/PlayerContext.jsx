@@ -7,7 +7,6 @@ import {
 } from "react";
 
 import PlayerService from "../services/PlayerService";
-
 import { AuralixMusic } from "@auralix/music";
 
 const PlayerContext = createContext(null);
@@ -27,6 +26,14 @@ export function PlayerProvider({ children }) {
   const [currentTime, setCurrentTime] = useState(0);
 
   const [duration, setDuration] = useState(0);
+  const playlistRef = useRef([]);
+  const currentIndexRef = useRef(-1);
+
+  useEffect(() => {
+    playlistRef.current = playlist;
+    currentIndexRef.current = currentIndex;
+  }, [playlist, currentIndex]);
+
 
   useEffect(() => {
 
@@ -61,33 +68,6 @@ export function PlayerProvider({ children }) {
   };
 
 }, [isPlaying]);
-
-useEffect(() => {
-
-  let listener;
-
-  async function register() {
-
-    listener = await AuralixMusic.addListener(
-      "songCompleted",
-      () => {
-
-        next();
-
-      }
-    );
-
-  }
-
-  register();
-
-  return () => {
-
-    listener?.remove();
-
-  };
-
-}, []);
 
     const updateDuration = () => {
       setDuration(audio.duration || 0);
